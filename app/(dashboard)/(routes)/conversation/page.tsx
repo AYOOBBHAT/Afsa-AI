@@ -7,6 +7,9 @@ import {Heading} from "@/components/heading";
 import { useForm } from "react-hook-form"
 import { formSchema } from "./constants";
 import {zodResolver} from "@hookform/resolvers/zod"
+
+import {Form} from "@/components/ui/form";
+
 const ConversationPage=()=>{
 
     const form =useForm <z.infer<typeof formSchema>>({
@@ -20,20 +23,18 @@ defaultValues:{
     const isLoading=form.formState.isSubmitting;
     const onSubmit=async(values:z.infer<typeof formSchema>)=>{
         console.log(values);
-    }
-
-
-        
-
-
-
-    
-    
-    
+    };
 
     return <div>
         <Heading title="Conversation" description="most advanced conversation model" icon={MessageSquare} iconColor="text-voilet-500"  bgColor="bg-voilet-500/10" />
         <div className="px-4 lg:px-8">
+
+            <div>
+            <Form  {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-lg border w-full p-4 px-3 focus-within:shadow-sm grid grid-col-12 gap-2"></form>
+    
+            </Form>
+            </div>
 
         </div>
         
