@@ -1,10 +1,15 @@
 "use client";
 
+
+import axios from "axios"
 import * as z from "zod";
 import {MessageSquare} from "lucide-react";
-
 import {Heading} from "@/components/heading";
 import { useForm } from "react-hook-form"
+import {useState} from "react";
+
+
+
 import { formSchema } from "./constants";
 import {zodResolver} from "@hookform/resolvers/zod"
 
@@ -12,11 +17,21 @@ import {Form, FormField,FormItem,FormControl} from "@/components/ui/form";
 
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button"
+import {useRouter} from "next/navigation";
 
+import { ChatCompletionRequestMessage } from "openai";
+import {Empty} from "@/components/empty";
+import {Loader} from "@/components/loader" 
+import {cn} from "@/lib/utils";
+import {UserAvatar} from "@/components/user-avatar";
+import {BotAvatar} from "@/components/bot-avatar";
 
 const ConversationPage=()=>{
+    const router=useRouter();
+    const [messages,setMessages]=useState<ChatCompletionRequestMessage[]>([])
 
     const form =useForm <z.infer<typeof formSchema>>({
+        
 resolver:zodResolver(formSchema),
 defaultValues:{
     prompt:""
@@ -25,22 +40,56 @@ defaultValues:{
     });
 
     const isLoading=form.formState.isSubmitting;
-    const onSubmit=async(values:z.infer<typeof formSchema>)=>{
-        console.log(values);
-    };
 
-    return <div>
-        <Heading title="Conversation" description="most advanced conversation model" icon={MessageSquare} iconColor="text-voilet-500"  bgColor="bg-voilet-500/10" />
+    const onSubmit=async(values:z.infer<typeof formSchema>)=>{
+
+        try{
+            const userMessage:ChatCompletionRequestMessage={
+                role:"user",
+                content:values.prompt,
+            };
+const newMessages=[...messages,userMessage];
+const responce =await axios.post('/api/conversation',{messages:newMessages});
+
+
+setMessages((current)=>[...current,userMessage,responce.data]);
+
+form.reset();
+
+        }catch(error:any){
+             // to do:open pro model
+            console.log(error);
+        }
+        finally{
+            router.refresh();
+
+        }
+
+        
+    }
+
+    return(
+     <div>
+        <Heading title="Conversation"
+         description="most advanced conversation model"
+          icon={MessageSquare} iconColor="text-voilet-500" 
+         bgColor="bg-voilet-500/10"
+          />
+          
+
+
         <div className="px-4 lg:px-8">
 
             <div>
             <Form  {...form}>
 
-                <form onSubmit={form.handleSubmit(onSubmit)} className="rounded-lg border w-full p-4 px-3 focus-within:shadow-sm grid grid-col-12 gap-2">
+                <form onSubmit={form.handleSubmit(onSubmit)}
+                 className="rounded-lg border w-full p-4 px-3 focus-within:shadow-sm grid grid-col-12 gap-2">
+
                  <FormField name="prompt" render={({field})=>(<FormItem  className="col-span-12 lg:col-span-10">
                     <FormControl className="m-0 p-0">
 
-<Input  className="border-0 outline-none focus-visible:ring-0 focus-visible:ring:transparent "  disabled={isLoading} placeholder="hii my-self Afsa-ai " {...field}/>
+      <Input  className="border-0 outline-none focus-visible:ring-0 focus-visible:ring:transparent "  disabled={isLoading} placeholder="hii my-self Afsa-ai " {...field}/>
                     </FormControl>
                  </FormItem>
 
@@ -55,17 +104,46 @@ defaultValues:{
     
             </Form>
             </div>
+
             <div className="space-y-4 mt-4">
-               message content
+                {  isLoading && ( 
+                <div className="p-8 rounded-lg w-full flex flex-items-center justiy-center bg-muted">
+                    <Loader/>
+                </div>
+                 )}
+
+
+                {messages.length===0 && !isLoading &&(
+                  <Empty label="no conversation started"/>
+                  )}
+               <div className="flex flex-col-reverse gap-y-4">
+                {messages.map((message)=>( 
+                    <div key={message.content}
+                    className={cn(
+                        "p-8 w-full flex items-start gap-x-8 rounded-lg",message.role==="user"? "bg-white border border-black/10":"bg-muted"
+                    )}
+                    >
+
+     {message.role==="user" ?<UserAvatar/>:<BotAvatar/>}
+
+                  <p className="text-sm"> {message.content}
+                  </p>      
+                        </div>
+                      )
+
+                )}
+                </div>
+               
 
             </div>
 
         </div>
         
         </div>
+    );
          
-        
-
+    
+    
     
 }
 
