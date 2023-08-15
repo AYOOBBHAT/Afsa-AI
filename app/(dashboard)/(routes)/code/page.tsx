@@ -3,13 +3,10 @@
 //import fetch from "node-fetch"
 import axios from "axios"
 import * as z from "zod";
-import {MessageSquare} from "lucide-react";
+import {Code} from "lucide-react";
 import {Heading} from "@/components/heading";
 import { useForm } from "react-hook-form"
 import {useState} from "react";
-
-
-
 import { formSchema } from "./constants";
 import {zodResolver} from "@hookform/resolvers/zod"
 
@@ -25,8 +22,8 @@ import {Loader} from "@/components/loader"
 import {cn} from "@/lib/utils";
 import {UserAvatar} from "@/components/user-avatar";
 import {BotAvatar} from "@/components/bot-avatar";
-
-const ConversationPage=()=>{
+import ReactMarkdown  from "react-markdown";
+const CodePage=()=>{
 
     const router=useRouter();
     const [messages,setMessages]=useState<ChatCompletionRequestMessage[]>([])
@@ -54,7 +51,7 @@ defaultValues:{
 
 
 const newMessages=[...messages,userMessage];
-const response =await axios.post("/api/conversation", {messages:newMessages});
+const response =await axios.post("/api/code", {messages:newMessages});
 
 
 setMessages((current)=>[...current,userMessage,response.data]);
@@ -75,10 +72,10 @@ form.reset();
 
     return(
      <div>
-        <Heading title="Conversation"
-         description="most advanced conversation model"
-          icon={MessageSquare} iconColor="text-voilet-500" 
-         bgColor="bg-voilet-500/10"
+        <Heading title="Code Generation"
+         description="Generate Code"
+          icon={Code} iconColor="text-green-700" 
+         bgColor="bg-green-700/10"
           />
           
 
@@ -94,7 +91,7 @@ form.reset();
                  <FormField name="prompt" render={({field})=>(<FormItem  className="col-span-12 lg:col-span-10">
                     <FormControl className="m-0 p-0">
 
-      <Input  className="border-0 outline-none focus-visible:ring-0 focus-visible:ring:transparent "  disabled={isLoading} placeholder="hii my-self Afsa-ai " {...field}/>
+      <Input  className="border-0 outline-none focus-visible:ring-0 focus-visible:ring:transparent "  disabled={isLoading} placeholder="toggle button using react hooks" {...field}/>
                     </FormControl>
                  </FormItem>
 
@@ -131,8 +128,24 @@ form.reset();
 
      {message.role==="user" ?<UserAvatar/>:<BotAvatar/>}
 
-                  <p className="text-sm"> {message.content}
-                  </p>      
+                     <ReactMarkdown
+                      components={{pre:({ node,...props})=>(
+                            <div className="overflow-auto w-full my-2 bg-black/10 p-2 rounded-lg"> 
+                            <pre{...props}/>
+                            </div>
+                ),
+                code:({node ,...props})=>(<code className="bg-black/10 rounded-lg p-1"{...props}/>
+
+                )
+                     }}
+                     className="text-sm overflow-hidden leading-7 "
+                     
+                     
+                     >
+
+
+                        {message.content || ""}
+                     </ReactMarkdown>
                         </div>
                       )
 
@@ -152,4 +165,4 @@ form.reset();
     
 }
 
-export default ConversationPage;
+export default CodePage;
