@@ -38,7 +38,7 @@ if(!messages)
 {
     return new NextResponse("messages required",{status:400});
 }
-// USING API-MODEL..>
+// USING API-MODEL..
 
  const response=await openai.createChatCompletion({
 
