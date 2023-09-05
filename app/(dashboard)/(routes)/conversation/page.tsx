@@ -1,34 +1,29 @@
 "use client";
-
-//import fetch from "node-fetch"
-import axios from "axios"
+import axios from "axios" 
 import * as z from "zod";
 import {MessageSquare} from "lucide-react";
 import {Heading} from "@/components/heading";
 import { useForm } from "react-hook-form"
 import {useState} from "react";
-
-
-
+import {toast} from "react-hot-toast";
 import { formSchema } from "./constants";
 import {zodResolver} from "@hookform/resolvers/zod"
-
 import {Form, FormField,FormItem,FormControl} from "@/components/ui/form";
-
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button"
 import {useRouter} from "next/navigation";
-
 import { ChatCompletionRequestMessage } from "openai";
-import {Empty} from "@/components/empty";
+import {Empty} from "@/components/ui/empty";
 import {Loader} from "@/components/loader" 
 import {cn} from "@/lib/utils";
 import {UserAvatar} from "@/components/user-avatar";
 import {BotAvatar} from "@/components/bot-avatar";
+import {useProModal} from "@/hooks/use-pro-modal";
 
 const ConversationPage=()=>{
 
     const router=useRouter();
+    const proModal=useProModal();
     const [messages,setMessages]=useState<ChatCompletionRequestMessage[]>([])
 
     const form =useForm <z.infer<typeof formSchema>>({
@@ -45,25 +40,26 @@ defaultValues:{
     const onSubmit=async(values:z.infer<typeof formSchema>)=>{
 
         try{
+            
             const userMessage:ChatCompletionRequestMessage={
                 role:"user",
                 content:values.prompt,
-            }
-
-
-
+            };
 
 const newMessages=[...messages,userMessage];
 const response =await axios.post("/api/conversation", {messages:newMessages});
-
-
 setMessages((current)=>[...current,userMessage,response.data]);
 
 form.reset();
 
         }catch(error:any){
-             // to do:open pro model
-            console.log(error);
+             
+            if(error?.responce?.status==403){
+                proModal.onOpen();
+            }
+            else {
+                toast.error("something went wrong");
+            }
         }
         finally{
             router.refresh();

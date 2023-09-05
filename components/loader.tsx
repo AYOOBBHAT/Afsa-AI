@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/image"
   export const Loader =()=>{
 
 
@@ -7,12 +7,13 @@ import Image from "next/image";
         >
             <div className="w-10 h-10 relative animate-spin">
                 <Image alt="logo"
-                fill
+                
                 src="/logo.png"
+                fill
                  />
 
             </div>
-            <p className="text-sm text-muted-foreground"> Afsa is generating responce "Wait"</p>
+            <p className="text-sm text-muted-foreground"> Afsa is generating responce Wait</p>
         </div>
     )
 };

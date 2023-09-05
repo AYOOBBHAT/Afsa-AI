@@ -11,10 +11,13 @@ import {
     Music, Settings, Code
 } from "lucide-react";
 
+import { FreeCounter } from "@/components/free-counter";
+import { Montserrat } from 'next/font/google'
 
-import { Montserrat } from "next/font/google";
 
-const montserrat = Montserrat({
+
+
+const poppins = Montserrat({
     weight: "600",
     subsets: ["latin"]
 
@@ -79,8 +82,18 @@ const routes = [{
 
 
 ];
-const Sidebar = () => {
+
+
+export const Sidebar = ({
+    apiLimitCount = 0,
+    isPro = false
+  }: {
+    apiLimitCount: number;
+    isPro: boolean;
+  }) => {
+
     const pathname = usePathname();
+  
 
     return (
 
@@ -89,16 +102,15 @@ const Sidebar = () => {
 
                 <Link href="/dashboard" className="flex items-center pl-3 mb-14" >
                     <div className="relative w-8 h-8 mr-4">
-                        <Image fill
-                            alt="Logo"
-                            src="/logo.png" />
+                        <Image fill alt="Logo"
+                        src="/logo.png" />
                     </div>
-
-
-                    <h1 className={cn("text-2xl font-bold", montserrat.className)}>
+                    <h1 className={cn("text-2xl font-bold", poppins.className)}>
 
                         Afsa</h1>
                 </Link>
+
+
 
                 <div className="space-y-1">
                     {routes.map((route) => (
@@ -112,13 +124,10 @@ const Sidebar = () => {
 
                     <div className=" flex items-center flex-1 " >
 
-                        <route.icon className={cn(" h-5 w-5 mr-3, route.color")} />
+                        <route.icon className={cn(" h-5 w-5 mr-3, route.color",route.color)} />
 
                         {route.label}
                     </div>
-
-
-
 
                 </Link>
 
@@ -126,9 +135,15 @@ const Sidebar = () => {
                 )
                 
                 )}
+
+
             </div>
+           
         </div>
+        <FreeCounter 
+        apiLimitCount={apiLimitCount} 
+        isPro={isPro}/>
+
     </div >
 );
-}
-export default Sidebar;
+};

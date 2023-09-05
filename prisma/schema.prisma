@@ -2,16 +2,6 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url = env("DATABASE_URL")
-  relationMode = "prisma"
-}
-
 model UserApiLimit {
   id        String      @id @default(cuid())
   userId    String   @unique
@@ -28,3 +18,16 @@ model UserSubscription {
   stripePriceId          String?   @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 }
+
+// 
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
