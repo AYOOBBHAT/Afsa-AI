@@ -10,14 +10,9 @@ import {
     VideoIcon,
     Music, Settings, Code
 } from "lucide-react";
+import { Montserrat } from "next/font/google"
 
-import { FreeCounter } from "@/components/free-counter";
-import { Montserrat } from 'next/font/google'
-
-
-
-
-const poppins = Montserrat({
+const montserrat = Montserrat({
     weight: "600",
     subsets: ["latin"]
 
@@ -84,13 +79,7 @@ const routes = [{
 ];
 
 
-export const Sidebar = ({
-    apiLimitCount = 0,
-    isPro = false
-  }: {
-    apiLimitCount: number;
-    isPro: boolean;
-  }) => {
+ const Sidebar=()=>{
 
     const pathname = usePathname();
   
@@ -105,7 +94,7 @@ export const Sidebar = ({
                         <Image fill alt="Logo"
                         src="/logo.png" />
                     </div>
-                    <h1 className={cn("text-2xl font-bold", poppins.className)}>
+                    <h1 className={cn("text-2xl font-bold", montserrat.className)}>
 
                         Afsa</h1>
                 </Link>
@@ -140,10 +129,11 @@ export const Sidebar = ({
             </div>
            
         </div>
-        <FreeCounter 
-        apiLimitCount={apiLimitCount} 
-        isPro={isPro}/>
+        
 
     </div >
 );
-};
+}
+
+export default Sidebar;
+

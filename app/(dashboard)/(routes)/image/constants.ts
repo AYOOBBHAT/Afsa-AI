@@ -6,7 +6,7 @@ export const formSchema = z.object({
   }),
   amount: z.string().min(1),
   resolution: z.string().min(1),
-});
+});   
 
 export const amountOptions = [
   {

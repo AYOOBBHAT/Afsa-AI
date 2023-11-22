@@ -1,12 +1,68 @@
 
 "use client";
-import { ArrowRight} from "lucide-react";
+import { ArrowRight, MessageSquare} from "lucide-react";
 import {Card} from "@/components/ui/card"
 import {cn} from "@/lib/utils";
-import {tools} from "@/constants";
-import {useRouter} from "next/navigation";
 
-export default function HomePage() {
+import {useRouter} from "next/navigation";
+import {Music, Image, Video, Code } from "lucide-react"
+
+
+const tools =[
+  {
+    label:"Music Generation ",
+    icon:Music,
+    color:"text-emerald-500",
+    bgColor:"bg-emerald-500/10",
+    href:"/music",
+
+  },
+
+  {
+    label: "Video Generation",
+    icon: Video,
+    color: "text-orange-700",
+    bgColor: "bg-orange-700/10",
+    href: "/video",
+  },
+
+
+
+  {
+    label:"Conversation",
+    icon :MessageSquare,
+    color:"text-voilet-500",
+    bgColor:"bg-voilet-500/10",
+    href :"/conversation",
+
+  },
+  
+
+  {
+    
+      label: "Image Generation",
+      icon: Image,
+      color: "text-pink-700",
+      bgColor: "bg-pink-700/10",
+      href: "/image",
+    
+  },
+  {
+    label: "Code Generation",
+    icon: Code,
+    color: "text-green-700",
+    bgColor: "bg-green-700/10",
+    href: "/code",
+  },
+
+
+
+
+
+
+]
+
+const Dashboard=()=> {
   const router = useRouter();
 
   return (
@@ -37,4 +93,6 @@ export default function HomePage() {
     </div>
   );
 }
+
+export default Dashboard;
 
