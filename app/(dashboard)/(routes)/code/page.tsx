@@ -132,6 +132,7 @@ const CodePage = () => {
                     code: ({ node, ...props }) => (
                       <code className="bg-black/10 rounded-lg p-1" {...props} />
                     )
+                    
                   }} className="text-sm overflow-hidden leading-7">
                     {message.content || ""}
                   </ReactMarkdown>
